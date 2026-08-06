@@ -1,233 +1,251 @@
-# 📘 Chapter 6 – Part II: Understanding How Triggers Think
-## From Business Events to Automatic Actions
+# ⚡ Chapter 6 – Part II: Understanding How Triggers Think
 
-> **"Automation becomes reliable when software knows exactly when to act and what responsibility belongs to it."**
-
----
-
-# 🎯 Sprint Objective
-
-In this sprint, I learned how professional Salesforce developers design **clean and maintainable Apex Triggers**. Instead of writing business logic inside Triggers, Triggers should simply observe business events and delegate the work to specialized Service classes.
+> *"A Trigger should respond to a business event—not become the entire business process."*
 
 ---
 
-# 📚 Learning Outcomes
+# 📖 Overview
 
-By completing Part II, I understood how to:
+This chapter explains **how Salesforce Triggers should be designed** in enterprise applications.
 
-- Understand the responsibility of Apex Triggers.
-- Differentiate Trigger responsibilities from Service class responsibilities.
-- Learn the purpose of Before and After Trigger events.
-- Understand how business timing determines Trigger timing.
-- Design maintainable Trigger architecture.
-- Build scalable automation using Service classes.
+Instead of writing large Triggers containing business logic, SOQL queries, DML operations, email logic, and validations, the chapter introduces the idea of **clean Trigger architecture**.
+
+The Trigger's responsibility is simple:
+
+- Detect a business event.
+- Delegate work to the appropriate Service class.
+
+This approach creates software that is scalable, maintainable, and easier for other developers to understand.
+
+---
+
+# 🎯 Learning Objectives
+
+After completing this chapter, I learned how to:
+
+- Understand the responsibilities of a Trigger.
+- Distinguish between Trigger logic and business logic.
+- Learn Before and After Trigger events.
+- Design lightweight Triggers.
+- Delegate work to Service classes.
+- Build maintainable Salesforce automation.
 
 ---
 
 # 🏢 Business Scenario
 
-The Placement Management System already contains several Service classes such as:
+A student submits a Job Application.
 
-- StudentService
-- JobService
-- ApplicationService
+The software should automatically:
 
-Whenever an important business event occurs, the Trigger should simply notify the appropriate Service class instead of containing the business logic itself.
+- Validate the application.
+- Check eligibility.
+- Prevent duplicate applications.
+- Update placement statistics.
+- Notify the Placement Office.
+
+The Trigger should **not** perform all these tasks itself.
+
+Instead, it should delegate each responsibility to a dedicated Service class.
+
+---
+
+# 💡 How a Trigger Should Think
+
+A Trigger should answer only one question:
+
+> **"What business event just happened?"**
 
 Example:
 
-```text
-Student Submits Application
+Student submits Job Application
         ↓
-Application Trigger Fires
+Trigger detects the event
         ↓
-ApplicationService Validates Application
-```
-
-The Trigger detects the event.
-
-The Service class performs the business processing.
-
----
-
-# 🚀 Trigger Does Not Think Alone
-
-A Trigger is similar to a doorbell.
-
-The button simply informs the system that someone pressed it.
-
-Similarly,
-
-```text
-Business Event
+Calls ApplicationService
         ↓
-Trigger Detects Event
-        ↓
-Service Class Executes Business Logic
-```
+ApplicationService performs validation
 
-The Trigger announces the event.
-
-The Service class decides what action should be taken.
+The Trigger does not calculate or validate anything itself.
 
 ---
 
-# 💡 Trigger Responsibility
+# 🔄 Before vs After Events
 
-A Trigger should only:
+Salesforce provides different Trigger execution timings.
 
-- Detect business events
-- Identify the operation being performed
-- Delegate work to Service classes
+## Before Events
 
-A Trigger should **not**:
+Used when the system needs to prepare or validate data **before** it is saved.
 
-- Perform business validation
-- Execute SOQL queries
-- Perform DML operations
-- Send notifications
-- Generate reports
-- Implement business workflows
+Typical use cases:
 
-Its responsibility is coordination, not business processing.
+- Validate business rules.
+- Populate default values.
+- Prevent invalid records.
 
 ---
 
-# 🏗 Service Class Responsibility
+## After Events
 
-Service classes contain the business logic of the application.
+Used when the record has already been saved.
 
-Typical responsibilities include:
+Typical use cases:
 
-- Business validation
-- SOQL operations
-- DML operations
-- Notification processing
-- Business calculations
-- Cross-object processing
-
-This separation improves maintainability and code reusability.
+- Send notifications.
+- Update reports.
+- Update related records.
+- Start additional business processes.
 
 ---
 
-# ⏳ Understanding Trigger Timing
+# 🏗 Trigger Responsibility
 
-Salesforce provides two major Trigger timings.
+The Trigger should only:
 
-## Before Trigger
+- Detect business events.
+- Identify the correct timing (Before or After).
+- Delegate processing to the correct Service.
 
-Executed before the record is saved.
-
-Typical use cases include:
-
-- Business validation
-- Duplicate prevention
-- Field value modification
-- Data verification
+The Trigger should never become the place where all business logic is written.
 
 ---
 
-## After Trigger
+# 🧩 Service Layer
 
-Executed after the record has been successfully saved.
+Instead of placing every operation inside the Trigger, responsibilities should be separated.
 
-Typical use cases include:
+Example architecture:
 
-- Email notifications
-- Dashboard updates
-- Report refresh
-- Audit logging
-- Cross-object updates
-
----
-
-# 📌 Business Timing
-
-Business requirements determine Trigger timing.
-
-Examples:
-
-- Validate eligibility → Before Trigger
-- Prevent duplicate applications → Before Trigger
-- Send confirmation email → After Trigger
-- Update placement statistics → After Trigger
-- Refresh dashboards → After Trigger
-
-Professional developers think about the business requirement first and then choose the appropriate Trigger timing.
-
----
-
-# 🔄 One Business Event Can Start Multiple Processes
-
-A single business event can trigger multiple independent services.
-
-Example:
-
-```text
-Application Updated
-        ↓
-Application Trigger
+JobApplicationTrigger
         ↓
 ApplicationService
         ↓
-NotificationService
-        ↓
-StatisticsService
-```
+Business Logic
 
-Each Service performs one specific responsibility while the Trigger remains simple and easy to understand.
+Additional responsibilities can be handled by:
+
+- StatisticsService
+- NotificationService
+
+Each service has one clear responsibility.
+
+---
+
+# 💼 Benefits of Clean Trigger Design
+
+A lightweight Trigger provides:
+
+- Better readability.
+- Easier debugging.
+- Simpler maintenance.
+- Better scalability.
+- Easier future enhancements.
+- Improved teamwork.
+
+New developers can quickly understand what the Trigger does because it delegates work instead of implementing everything itself.
 
 ---
 
 # 🧠 Engineering Principles Learned
 
-## 1. Trigger Observes, Service Executes
+This chapter emphasizes several software engineering principles:
 
-The Trigger detects business events.
-
-The Service class executes the business logic.
-
----
-
-## 2. Business Timing Determines Trigger Timing
-
-Validation should occur before saving.
-
-Automation should occur after saving.
+- Keep Triggers small.
+- Separate responsibilities.
+- Delegate business logic.
+- Build reusable Service classes.
+- Design for future enhancements.
+- Improve maintainability.
 
 ---
 
-## 3. One Event Can Trigger Multiple Services
+# 🛠 Design Activities
 
-A single business event may require multiple independent business processes.
+This chapter focuses on Trigger architecture rather than complex implementation.
 
-Using specialized Service classes keeps the application modular and maintainable.
+Activities include:
+
+- Identifying business events.
+- Choosing Before vs After events.
+- Deciding which Service should perform each responsibility.
+- Designing clean automation.
 
 ---
 
-## 4. Clean Architecture Improves Maintainability
+# 🚀 Skills Gained
 
-Small Triggers and dedicated Service classes make Salesforce applications easier to understand, test, and extend.
+- Trigger Architecture
+- Before Trigger Events
+- After Trigger Events
+- Service Layer Design
+- Separation of Concerns
+- Enterprise Salesforce Design
+
+---
+
+# 📚 Interview Preparation
+
+### Q1. What is the responsibility of a Trigger?
+
+A Trigger should detect a business event and delegate the work to the appropriate Service class.
+
+---
+
+### Q2. What is the difference between Before and After Triggers?
+
+**Before Trigger**
+
+- Executes before the record is saved.
+- Used for validation and modifying field values.
+
+**After Trigger**
+
+- Executes after the record is saved.
+- Used for notifications, reports, and related record updates.
+
+---
+
+### Q3. Why shouldn't business logic be written inside a Trigger?
+
+Because large Triggers become difficult to maintain, understand, and extend. Business logic should remain inside dedicated Service classes.
+
+---
+
+### Q4. What is the advantage of using Service classes?
+
+Service classes separate responsibilities, improve code reuse, simplify maintenance, and make future enhancements easier.
+
+---
+
+### Q5. Why should Triggers remain small?
+
+Small Triggers are easier to understand, debug, test, and maintain. They coordinate automation instead of implementing every business rule.
 
 ---
 
 # 📌 Key Takeaways
 
-- Triggers respond to business events.
-- Triggers should remain lightweight.
-- Business logic belongs inside Service classes.
-- Before and After Triggers serve different business purposes.
-- One business event can initiate multiple independent services.
-- Clean architecture improves scalability and maintainability.
+- Triggers should coordinate business events.
+- Business logic belongs in Service classes.
+- Before and After events have different responsibilities.
+- Clean architecture improves long-term maintainability.
+- Small Triggers create scalable Salesforce applications.
 
 ---
 
-# 📖 Sprint Summary
+# 📖 Chapter Summary
 
-During Part II of Sprint 6, I learned how enterprise Salesforce applications separate event detection from business processing. By keeping Triggers lightweight and delegating business logic to Service classes, developers can build scalable, reusable, and maintainable automation that aligns with enterprise development best practices.
+This chapter changed my understanding of Salesforce Triggers.
+
+Instead of viewing Triggers as places to write business logic, I learned that they should act as coordinators that detect business events and delegate work to specialized Service classes.
+
+This architecture creates enterprise applications that are modular, reusable, and easy to extend as business requirements evolve.
 
 ---
 
-# 🚀 Next Learning
+## ⭐ Repository Purpose
 
-➡️ **Chapter 6 – Part III: Engineering Sprint – Building Enterprise Triggers That Stay Clean**
+This README documents my learning from **Chapter 6 – Part II: Understanding How Triggers Think** as part of my Salesforce Developer learning journey.
+
+The chapter strengthened my understanding of Trigger architecture, Before vs After events, Service Layer design, and the engineering principles required to build clean and maintainable Salesforce automation.

@@ -1,0 +1,23 @@
+Student        Salesforce        Queueable       Named Credential      External API
+   │               │                 │                  │                  │
+   │ Selects       │                 │                  │                  │
+   │ Application   │                 │                  │                  │
+   ├──────────────►│                 │                  │                  │
+   │               │                 │                  │                  │
+   │               │ Enqueue Job     │                  │                  │
+   │               ├────────────────►│                  │                  │
+   │               │                 │                  │                  │
+   │               │                 │ Build Request    │                  │
+   │               │                 │─────────────────►│                  │
+   │               │                 │                  │                  │
+   │               │                 │                  │ POST /candidates │
+   │               │                 │                  ├─────────────────►│
+   │               │                 │                  │                  │
+   │               │                 │                  │     Response     │
+   │               │                 │                  │◄─────────────────┤
+   │               │                 │                  │                  │
+   │               │                 │ Process Response │                  │
+   │               │◄────────────────┤                  │                  │
+   │               │                 │                  │                  │
+   │               │ Update Status   │                  │                  │
+   │               │                 │                  │                  │

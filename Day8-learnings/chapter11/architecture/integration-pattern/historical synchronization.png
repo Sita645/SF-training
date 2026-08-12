@@ -1,0 +1,18 @@
+                 Scheduled Apex
+                       │
+                       ▼
+                   Batch Apex
+                       │
+              ┌────────┼────────┐
+              ▼        ▼        ▼
+           Batch 1   Batch 2   Batch N
+              │        │        │
+              └────────┼────────┘
+                       ▼
+                External API
+                       │
+                       ▼
+                Error Handling
+                       │
+                       ▼
+                     Retry

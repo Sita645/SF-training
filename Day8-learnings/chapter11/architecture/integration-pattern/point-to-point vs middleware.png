@@ -1,0 +1,14 @@
+Point-to-Point
+Salesforce
+     │
+     │
+     ▼
+Recruitment System
+MiddleWare
+                 ┌── HR
+                 │
+Salesforce ──► Middleware ──► Recruitment
+                 │
+                 ├── Finance
+                 │
+                 └── Analytics

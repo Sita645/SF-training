@@ -1,0 +1,45 @@
+┌──────────────────────┐
+│   Job Application    │
+│                      │
+│ Status = Selected    │
+└──────────┬───────────┘
+           │
+           ▼
+┌──────────────────────┐
+│  Candidate Trigger   │
+└──────────┬───────────┘
+           │
+           ▼
+┌──────────────────────────┐
+│ CandidateSyncQueueable   │
+└──────────┬───────────────┘
+           │
+           ▼
+┌──────────────────────────┐
+│     Named Credential     │
+│ Recruitment_API_Credential│
+└──────────┬───────────────┘
+           │
+           ▼
+┌──────────────────────────┐
+│      REST API            │
+│ External Recruitment     │
+│       System             │
+└──────────┬───────────────┘
+           │
+           ▼
+┌──────────────────────────┐
+│     Process Response     │
+│                          │
+│ Success / 400 / 401 /    │
+│ 403 / 500 / Error        │
+└──────────┬───────────────┘
+           │
+           ▼
+┌──────────────────────────┐
+│   Job Application        │
+│ Integration Status       │
+│ External Candidate ID    │
+│ Integration Error        │
+│ Last Attempt             │
+└──────────────────────────┘
